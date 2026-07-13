@@ -387,14 +387,10 @@
                 <div class="absolute w-72 sm:w-85 aspect-[4/5] bg-white border border-mitzBrown/5 shadow-md rounded-sm transform -translate-x-3 translate-y-1.5 -rotate-2 pointer-events-none opacity-60"></div>
 
                 <!-- Main Polaroid Card -->
-                <div id="polaroid-card" class="polaroid-transition relative w-80 sm:w-96 bg-white p-4 pb-12 rounded-sm shadow-xl border border-mitzBrown/10 cursor-pointer select-none transform hover:scale-102 hover:-rotate-1 active:scale-98" onclick="nextGalleryImage()">
+                <div id="polaroid-card" class="polaroid-transition relative w-80 sm:w-96 bg-white p-4 pb-12 rounded-sm shadow-xl border border-mitzBrown/10 cursor-pointer select-none transition-all duration-300 hover:-translate-y-2 hover:-rotate-1 hover:shadow-2xl active:scale-95" onclick="nextGalleryImage()">
                     <!-- Photo viewport -->
                     <div class="aspect-square w-full overflow-hidden bg-[#2C1E15] border border-mitzBrown/10 relative">
                         <img id="gallery-img" src="01.jpg" alt="미쯔 갤러리" class="w-full h-full object-cover transition-all duration-300">
-                        <!-- Click Hint Overlay -->
-                        <div class="absolute inset-0 bg-black/30 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <span class="text-white bg-mitzBrown/80 backdrop-blur-sm px-4 py-2 rounded-full text-xs font-bold title-font border border-white/20">다음 사진 보기 👉</span>
-                        </div>
                     </div>
                     <!-- Caption text -->
                     <div class="text-center mt-6">
@@ -817,18 +813,14 @@
         
         // 캡션 사전 정의 목록
         const defaultCaptions = [
-            "꼬순내 다 뺏긴 미쯔 🛁🫧",
-            "초롱초롱한 눈빛 ✨👀✨",
-            "새 장난감이 제일 좋아 🧸💖",
-            "새벽까지 엄마 기다리며 꾸벅꾸벅 조는 미쯔 🥱🌙",
-            "장난감 사냥 크아앙! 🦖🔥",
-            "내 땅콩 ㅠㅠ 🥜🥺",
-            "반쯤 졸고 있는 미쯔 😴💤",
-            "엄마 따라 카페 가서 간식 잔뜩 먹음!! ☕️🍪🐶",
-            "뽀송뽀송 미쯔 🫧☁️",
-            "아가 시절 엄마 껌딱지 미쯔 👶🏻🐶💕",
-            "엄마 친구들 무서워… 🫣💦"
-
+            "귀여움 만렙 미쯔 💖",
+            "렉카 탑승 인증! 🚗",
+            "독보적인 초코 무늬 🍪",
+            "꼬순내 충전 발바닥 🐾",
+            "개성만점 얼굴망 👺",
+            "무한 긍정 에너지 ✨",
+            "솔방울 약탈기 🌲",
+            "엄마 양말 사수하기 🧦"
         ];
 
         // Fisher-Yates Shuffle Algorithm for randomizing order
@@ -993,7 +985,7 @@
             } else {
                 // 초기 더미 메시지
                 messages = [
-                    { author: "미쯔엄마", text: "우리 이쁘니 미쯔 평생 함께 사랑하며 살자! 🧡", date: "2026-07-13 14:11" },
+                    { author: "미쯔맘", text: "우리 이쁘니 미쯔 평생 함께 사랑하며 살자! 🧡", date: "2026-07-13 14:11" },
                     { author: "동네삼촌", text: "렉카 타고 상경했던 대장부 미쯔 너무 멋집니다!", date: "2026-07-13 13:50" }
                 ];
                 localStorage.setItem('mitz_messages', JSON.stringify(messages));
