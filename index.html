@@ -53,9 +53,16 @@
         .progress-bar-fill {
             transition: width 0.1s linear;
         }
+        /* Custom transition for polaroid swap */
+        .polaroid-transition {
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+        }
     </style>
 </head>
 <body class="bg-mitzCream text-mitzBrown overflow-x-hidden">
+
+    <!-- 1. 스크롤 진행도 상단바 -->
+    <div id="scroll-progress-bar" class="fixed top-0 left-0 h-1.5 bg-mitzOrange z-[100] transition-all duration-75" style="width: 0%"></div>
 
     <!-- Sticky Navigation -->
     <nav class="sticky top-0 z-50 bg-mitzCream/90 backdrop-blur-md border-b border-mitzBrown/10 px-4 py-3 md:py-4 transition-all duration-300">
@@ -66,10 +73,11 @@
             </a>
             
             <!-- Desktop Menu -->
-            <div class="hidden md:flex items-center gap-8 title-font text-lg">
+            <div class="hidden md:flex items-center gap-6 title-font text-lg">
                 <a href="#home" class="hover:text-mitzOrange transition-colors">홈</a>
                 <a href="#story" class="hover:text-mitzOrange transition-colors">미쯔 스토리 🌟</a>
                 <a href="#profile" class="hover:text-mitzOrange transition-colors">매력 프로필</a>
+                <a href="#gallery" class="hover:text-mitzOrange transition-colors">사진첩 📸</a>
                 <a href="#life" class="hover:text-mitzOrange transition-colors">일상 & 보물</a>
             </div>
 
@@ -79,7 +87,7 @@
             rel="noopener noreferrer"
             class="bg-mitzOrange hover:bg-mitzBrown text-white px-4 py-2 rounded-full font-bold shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-2 transform active:scale-95">
                 <i class="fa-brands fa-instagram"></i>
-                <span>인스타그램 방문</span>
+                <span class="text-sm md:text-base">인스타그램</span>
             </a>
         </div>
     </nav>
@@ -159,7 +167,7 @@
                         <span class="text-mitzOrange font-bold text-sm tracking-wider uppercase">01. 시작 - 운명적인 만남</span>
                         <h3 class="title-font text-2xl text-mitzBrown mt-1 mb-3">논산시 유기동물 보호소의 기적</h3>
                         <p class="text-mitzBrown/80 leading-relaxed">
-                            차갑고 외로웠던 논산시 유기동물 보호소의 한 구석. 운명처럼 서로의 눈빛이 교차하던 그날, 미쯔는 든든한 평생 가족을 만났습니다. 불안했던 보호소 생활을 뒤로하고, 서울의 따스한 새 보금자리로 향하는 행복한 여정이 막 시작되던 찰나였습니다.
+                            차갑고 외로웠던 논산시 유기동물 보호소 of 한 구석. 운명처럼 서로의 눈빛이 교차하던 그날, 미쯔는 든든한 평생 가족을 만났습니다. 불안했던 보호소 생활을 뒤로하고, 서울의 따스한 새 보금자리로 향하는 행복한 여정이 막 시작되던 찰나였습니다.
                         </p>
                         <div class="mt-4 flex flex-wrap gap-2">
                             <span class="bg-mitzBrown/5 text-mitzBrown text-xs px-3 py-1 rounded-full">#입양성공</span>
@@ -363,12 +371,68 @@
         </div>
     </section>
 
+    <!-- 2. 사진첩 (추억 폴라로이드 사진첩 - 한 장씩 넘겨보는 인터랙티브 방식) -->
+    <section id="gallery" class="py-20 bg-mitzBeige relative border-t border-mitzBrown/10">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="title-font text-4xl md:text-6xl text-mitzBrown mb-4">📸 미쯔의 우당탕탕 폴라로이드 사진첩</h2>
+                <div class="w-24 h-1.5 bg-mitzOrange mx-auto rounded-full"></div>
+                <p class="text-lg text-mitzBrown/75 mt-4">폴라로이드 사진을 클릭하면 다음 보물 같은 사진으로 신나게 전환됩니다!</p>
+            </div>
+            
+            <!-- Interactive Polaroid Frame Container -->
+            <div class="relative flex flex-col items-center justify-center py-6">
+                <!-- Decorative Back Cards Stack Effect -->
+                <div class="absolute w-72 sm:w-85 aspect-[4/5] bg-white border border-mitzBrown/5 shadow-sm rounded-sm transform translate-x-4 translate-y-3 rotate-3 pointer-events-none opacity-40"></div>
+                <div class="absolute w-72 sm:w-85 aspect-[4/5] bg-white border border-mitzBrown/5 shadow-md rounded-sm transform -translate-x-3 translate-y-1.5 -rotate-2 pointer-events-none opacity-60"></div>
+
+                <!-- Main Polaroid Card -->
+                <div id="polaroid-card" class="polaroid-transition relative w-80 sm:w-96 bg-white p-4 pb-12 rounded-sm shadow-xl border border-mitzBrown/10 cursor-pointer select-none transform hover:scale-102 hover:-rotate-1 active:scale-98" onclick="nextGalleryImage()">
+                    <!-- Photo viewport -->
+                    <div class="aspect-square w-full overflow-hidden bg-[#2C1E15] border border-mitzBrown/10 relative">
+                        <img id="gallery-img" src="01.jpg" alt="미쯔 갤러리" class="w-full h-full object-cover transition-all duration-300">
+                        <!-- Click Hint Overlay -->
+                        <div class="absolute inset-0 bg-black/30 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <span class="text-white bg-mitzBrown/80 backdrop-blur-sm px-4 py-2 rounded-full text-xs font-bold title-font border border-white/20">다음 사진 보기 👉</span>
+                        </div>
+                    </div>
+                    <!-- Caption text -->
+                    <div class="text-center mt-6">
+                        <p id="gallery-caption" class="title-font text-mitzBrown text-lg sm:text-xl tracking-wide min-h-[32px]">귀여움 만렙 미쯔 💖</p>
+                        <p id="gallery-counter" class="text-xs text-mitzBrown/40 mt-1 font-sans">1 / 8</p>
+                    </div>
+                </div>
+
+                <!-- Controls & Guide -->
+                <div class="flex items-center gap-6 mt-8">
+                    <button onclick="prevGalleryImage()" class="w-12 h-12 rounded-full bg-white border-2 border-mitzBrown text-mitzBrown hover:bg-mitzOrange hover:text-white transition-all shadow-md active:scale-95 flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <span class="text-xs text-mitzBrown/60 font-bold bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full border border-mitzBrown/10 shadow-sm flex items-center gap-1.5">
+                        <span class="inline-block w-2 h-2 rounded-full bg-green-500 animate-ping"></span>
+                        <span><b>팁:</b> 사진 자체를 클릭해도 넘어갑니다!</span>
+                    </span>
+                    <button onclick="nextGalleryImage()" class="w-12 h-12 rounded-full bg-white border-2 border-mitzBrown text-mitzBrown hover:bg-mitzOrange hover:text-white transition-all shadow-md active:scale-95 flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox Modal (For fullscreen viewing if desired) -->
+    <div id="lightbox" class="fixed inset-0 bg-black/90 z-[200] hidden flex-col justify-center items-center p-4 cursor-pointer" onclick="closeLightbox()">
+        <img id="lightbox-img" class="max-w-full max-h-[80vh] rounded-lg shadow-2xl object-contain transition-all duration-300 transform scale-95" src="" alt="확대보기">
+        <p id="lightbox-caption" class="text-white text-lg mt-4 title-font tracking-wide"></p>
+        <span class="absolute top-4 right-4 text-white text-3xl"><i class="fa-solid fa-xmark"></i></span>
+    </div>
+
     <!-- Section 4: Life & Treasures (Interactive Arcade Game) -->
-    <section id="life" class="py-20 bg-mitzBeige relative">
+    <section id="life" class="py-20 bg-mitzCream relative">
         <div class="max-w-4xl mx-auto px-4">
             
             <div class="text-center mb-8">
-                <h2 class="title-font text-4xl md:text-6xl text-mitzBrown mb-4">🧦 미쯔의 우당탕탕 보물 사냥꾼</h2>
+                <h2 class="title-font text-4xl md:text-6xl text-mitzBrown mb-4">🧦 우당탕탕 보물 사냥꾼 최미쯔</h2>
                 <div class="w-24 h-1.5 bg-mitzOrange mx-auto rounded-full"></div>
                 <p class="text-lg text-mitzBrown/75 mt-4">
                     양말과 솔방울은 다 내꺼! 장애물을 피하며 미쯔의 보물을 가득 모아주세요.
@@ -472,6 +536,34 @@
         </div>
     </section>
 
+    <!-- 3. 최하단 짧은 메시지 남기기 (한 줄 방명록) -->
+    <section id="guestbook" class="py-16 bg-mitzBeige border-t border-b border-mitzBrown/10 relative">
+        <div class="max-w-3xl mx-auto px-4">
+            <div class="text-center mb-8">
+                <h3 class="title-font text-3xl md:text-4xl text-mitzBrown mb-2">🐾 미쯔에게 한 줄 메시지 남기기</h3>
+                <p class="text-sm text-mitzBrown/70 font-semibold">미쯔에게 하고 싶은 말이나 따뜻한 응원을 전해 주세요!</p>
+            </div>
+            
+            <!-- Message Write Form -->
+            <form id="msg-form" onsubmit="addMessage(event)" class="bg-white p-5 rounded-2xl border-2 border-mitzBrown/10 shadow-sm space-y-4 mb-8">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <input type="text" id="msg-author" placeholder="닉네임" required maxlength="10" class="col-span-1 border border-mitzBrown/20 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-mitzOrange/50 focus:border-mitzOrange">
+                    <input type="text" id="msg-text" placeholder="미쯔야 평생 아프지말고 행복하자! (최대 50자)" required maxlength="50" class="col-span-2 border border-mitzBrown/20 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-mitzOrange/50 focus:border-mitzOrange">
+                </div>
+                <div class="text-right">
+                    <button type="submit" class="bg-mitzOrange hover:bg-mitzBrown text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-md transition-colors active:scale-95 duration-200">
+                        응원 보내기 💌
+                    </button>
+                </div>
+            </form>
+
+            <!-- Message List Wrapper -->
+            <div id="messages-container" class="space-y-3 max-h-[350px] overflow-y-auto pr-2">
+                <!-- Dynamically loaded guestbook items -->
+            </div>
+        </div>
+    </section>
+
     <!-- Footer Section -->
     <footer class="bg-mitzBrown text-mitzCream py-12 px-4 border-t border-mitzDark/30">
         <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
@@ -484,7 +576,7 @@
             </div>
             
             <div class="flex gap-4 text-xs text-mitzCream/80">
-                <p>기획/제공: 미쯔 브랜딩 기획서</p>
+                <p>기획/제공: 미쯔 엄마</p>
                 <p class="border-l border-mitzCream/20 pl-4">무드: #발랄한 #위트있는 #사랑스러운</p>
             </div>
         </div>
@@ -708,9 +800,269 @@
         }
 
         // ============================================
+        // 1. SCROLL PROGRESS BAR LOGIC
+        // ============================================
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('scroll-progress-bar').style.width = scrolled + '%';
+        });
+
+        // ============================================
+        // 2. DYNAMIC FOLDER PROBE PHOTO GALLERY LOGIC (RANDOM SHUFFLE)
+        // ============================================
+        let galleryImages = [];
+        let currentGalleryIndex = 0;
+        
+        // 캡션 사전 정의 목록
+        const defaultCaptions = [
+            "귀여움 만렙 미쯔 💖",
+            "렉카 탑승 인증! 🚗",
+            "독보적인 초코 무늬 🍪",
+            "꼬순내 충전 발바닥 🐾",
+            "개성만점 얼굴망 👺",
+            "무한 긍정 에너지 ✨",
+            "솔방울 약탈기 🌲",
+            "엄마 양말 사수하기 🧦"
+        ];
+
+        // Fisher-Yates Shuffle Algorithm for randomizing order
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // 비동기 이미지 파일 존재 여부 테스트 함수
+        function checkImageExists(url) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve(true);
+                img.onerror = () => resolve(false);
+                img.src = url;
+            });
+        }
+
+        // 폴더 탐색 동적 빌더 함수 + 셔플 추가
+        async function loadGalleryImages() {
+            const tempGallery = [];
+            let checkIndex = 1;
+            const maxScanLimit = 50; // 과도한 조회를 방지하기 위한 최대 한도
+
+            // 1.jpg, 2.jpg... 순차적으로 조회 후 존재할 때까지 배열에 추가
+            while (checkIndex <= maxScanLimit) {
+                const currentPath = `gallery/${checkIndex}.jpg`;
+                const isPresent = await checkImageExists(currentPath);
+                
+                if (isPresent) {
+                    tempGallery.push(currentPath);
+                } else {
+                    // 순차 로딩이 끊기면 탐색 중지
+                    break;
+                }
+                checkIndex++;
+            }
+
+            // 만약 gallery/ 폴더를 못찾거나 비어있는 경우 기존 파일들로 백업 처리
+            if (tempGallery.length === 0) {
+                galleryImages = [
+                    "01.jpg", "02.jpg", "03.jpg", "04.jpg", "05.jpg", "06.jpg", "07.jpg", "08.jpg"
+                ];
+            } else {
+                galleryImages = tempGallery;
+            }
+
+            // 불러온 이미지 순서를 랜덤하게 뒤섞기!
+            shuffleArray(galleryImages);
+
+            renderGallery();
+        }
+
+        // 갤러리 UI 그리기 함수
+        function renderGallery() {
+            const cardImg = document.getElementById('gallery-img');
+            const cardCaption = document.getElementById('gallery-caption');
+            const cardCounter = document.getElementById('gallery-counter');
+
+            const currentPath = galleryImages[currentGalleryIndex];
+            
+            // 이미지 주소 삽입
+            cardImg.src = currentPath;
+
+            // 캡션 산출 (기본값 설정 대기)
+            let captionText = "";
+            if (currentPath.startsWith("gallery/")) {
+                const num = parseInt(currentPath.replace("gallery/", "").replace(".jpg", ""));
+                captionText = defaultCaptions[num - 1] || `미쯔의 숨겨진 보물 컷 #${num} 📸`;
+            } else {
+                // 백업 이미지 모드일 때
+                const num = parseInt(currentPath.replace(".jpg", ""));
+                captionText = defaultCaptions[num - 1] || `미쯔의 소중한 순간 💖`;
+            }
+
+            cardCaption.innerText = captionText;
+            cardCounter.innerText = `${currentGalleryIndex + 1} / ${galleryImages.length}`;
+        }
+
+        // 다음 사진 전환
+        function nextGalleryImage(e) {
+            if (e) e.stopPropagation(); // 중복 클릭 이벤트 전파 차단
+            
+            const card = document.getElementById('polaroid-card');
+            
+            // 부드러운 카드 흔들림 전환 애니메이션
+            card.style.transform = "translateX(50px) rotate(8deg) scale(0.95)";
+            card.style.opacity = "0";
+
+            setTimeout(() => {
+                currentGalleryIndex = (currentGalleryIndex + 1) % galleryImages.length;
+                renderGallery();
+                card.style.transform = "translateX(-50px) rotate(-8deg) scale(0.95)";
+                
+                setTimeout(() => {
+                    card.style.transform = "translateX(0px) rotate(0deg) scale(1)";
+                    card.style.opacity = "1";
+                    playCollectSound(); // 귀여운 효과음 연계
+                }, 50);
+            }, 250);
+        }
+
+        // 이전 사진 전환
+        function prevGalleryImage(e) {
+            if (e) e.stopPropagation(); // 클릭 이벤트 전파 차단
+            
+            const card = document.getElementById('polaroid-card');
+            
+            card.style.transform = "translateX(-50px) rotate(-8deg) scale(0.95)";
+            card.style.opacity = "0";
+
+            setTimeout(() => {
+                currentGalleryIndex = (currentGalleryIndex - 1 + galleryImages.length) % galleryImages.length;
+                renderGallery();
+                card.style.transform = "translateX(50px) rotate(8deg) scale(0.95)";
+                
+                setTimeout(() => {
+                    card.style.transform = "translateX(0px) rotate(0deg) scale(1)";
+                    card.style.opacity = "1";
+                    playCollectSound();
+                }, 50);
+            }, 250);
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            img.classList.remove('scale-100');
+            img.classList.add('scale-95');
+            setTimeout(() => {
+                lightbox.classList.add('hidden');
+                document.body.style.overflow = 'auto'; // Scroll unlock
+            }, 150);
+        }
+
+        // ============================================
+        // 3. GUESTBOOK/MESSAGE BOARD LOGIC
+        // ============================================
+        let messages = [];
+
+        // HTML 태그 탈옥 방지 함수
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+        function loadMessages() {
+            const container = document.getElementById('messages-container');
+            container.innerHTML = '';
+            
+            const savedData = localStorage.getItem('mitz_messages');
+            if (savedData) {
+                messages = JSON.parse(savedData);
+            } else {
+                // 초기 더미 메시지
+                messages = [
+                    { author: "미쯔맘", text: "우리 이쁘니 미쯔 평생 함께 사랑하며 살자! 🧡", date: "2026-07-13 14:11" },
+                    { author: "동네삼촌", text: "렉카 타고 상경했던 대장부 미쯔 너무 멋집니다!", date: "2026-07-13 13:50" }
+                ];
+                localStorage.setItem('mitz_messages', JSON.stringify(messages));
+            }
+
+            if (messages.length === 0) {
+                container.innerHTML = `<div class="text-center py-8 text-mitzBrown/40 text-sm">아직 작성된 메시지가 없어요. 따뜻한 첫 마디를 건네보세요! 🐾</div>`;
+                return;
+            }
+
+            messages.forEach((msg, idx) => {
+                const card = document.createElement('div');
+                card.className = "bg-white p-4 rounded-xl border border-mitzBrown/10 shadow-sm flex justify-between items-start gap-4 transition-all duration-200 hover:border-mitzOrange/30";
+                card.innerHTML = `
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-mitzOrange font-bold text-sm title-font">🐕 ${escapeHtml(msg.author)}</span>
+                            <span class="text-[10px] text-mitzBrown/40">${msg.date}</span>
+                        </div>
+                        <p class="text-sm text-mitzBrown/80 leading-relaxed">${escapeHtml(msg.text)}</p>
+                    </div>
+                    <button onclick="deleteMessage(${idx})" class="text-mitzBrown/30 hover:text-red-500 text-xs transition-colors p-1" title="메시지 삭제">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function addMessage(e) {
+            e.preventDefault();
+            const authorInput = document.getElementById('msg-author');
+            const textInput = document.getElementById('msg-text');
+
+            const author = authorInput.value.trim();
+            const text = textInput.value.trim();
+
+            if (!author || !text) return;
+
+            const now = new Date();
+            const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+            const newMsg = { author, text, date: dateStr };
+            messages.unshift(newMsg); // 최신글이 맨 위로
+
+            localStorage.setItem('mitz_messages', JSON.stringify(messages));
+            
+            authorInput.value = '';
+            textInput.value = '';
+
+            loadMessages();
+            showToast("💌 소중한 응원 메시지가 등록되었습니다!", "🎉");
+        }
+
+        function deleteMessage(idx) {
+            if (confirm("작성하신 응원 메시지를 정말 삭제할까요?")) {
+                messages.splice(idx, 1);
+                localStorage.setItem('mitz_messages', JSON.stringify(messages));
+                loadMessages();
+                showToast("🗑️ 메시지가 정상적으로 삭제되었습니다.", "🐾");
+            }
+        }
+
+        // 초기 실행
+        window.addEventListener('DOMContentLoaded', () => {
+            loadMessages();
+            loadGalleryImages(); // 갤러리 dynamic 프로빙 시작
+        });
+
+
+        // ============================================
         // MITZ ARCADE MINI GAME LOGIC (HTML5 CANVAS)
         // ============================================
-        
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         const scoreEl = document.getElementById('game-score');
